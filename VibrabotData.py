@@ -2,7 +2,8 @@ class VibrabotData:
 
 	leftLightSensor = 0
 	rightLightSensor = 0
-	irSensor = [0,0,0,0]
+	microphoneValue = 0
+	irSensor = [0,0,0,0,0]
 	
 	def setLeftLightSensor(self, value):
 	
@@ -32,14 +33,24 @@ class VibrabotData:
 		
 	def setIrSensor(self, index, value):
 	
-		if (index < len(irSensor)):
+		#if (index < len(irSensor)):
 			self.irSensor[index] = value
+		
+			return;
+		
+		
+	def getIrSensor(self, index):
+	#	if (index < len(irSensor)):
+			return(self.irSensor[index]);	
+			
+		#	return(0);	
+		
+		
+	def setMicrophone(self, value):
+		self.microphoneValue = value
 		
 		return;
 		
 		
-	def getIrSensor(self, index):
-		if (index < len(irSensor)):
-			return(self.inSensor[index]);	
-			
-		return(0);	
+	def getMicrophone(self):
+		return(self.microphoneValue);	
