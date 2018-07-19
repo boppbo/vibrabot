@@ -10,6 +10,10 @@ from tkinter import ttk
 from VibrabotData import *
 
 import serial
+
+
+irSensorCount = 5
+
 ser = serial.Serial('com49', 115200)
 
 global label
@@ -31,11 +35,10 @@ def updateWindow(vibrabotData):
 	
 	microphonelabel.config(text=str(vibrabotData.getMicrophone()))
 	
-	ir0Label.config(text=str(vibrabotData.getIrSensor(0)))
-	ir1Label.config(text=str(vibrabotData.getIrSensor(1)))
-	ir2Label.config(text=str(vibrabotData.getIrSensor(2)))
-	ir3Label.config(text=str(vibrabotData.getIrSensor(3)))
-	ir4Label.config(text=str(vibrabotData.getIrSensor(4)))
+	
+	for irLabel in range(irSensorCount):
+		irSensorLabel[irLabel].config(text=str(vibrabotData.getIrSensor(irLabel)))
+	
 	
 	return
 
@@ -53,11 +56,6 @@ def readRemoteByte():
 
 	return (token)
 
-
-
-def callback():
-	print ("click!")
-	return;
 
 def decode(line, vibrabotData):
 
@@ -107,7 +105,15 @@ def decode(line, vibrabotData):
 	return;
 
 def text_mod(arg):
-	print(arg)
+
+	arg = arg + 48
+	
+	byte1 = arg.to_bytes(1,byteorder='big')
+	
+	ser.write(b'#I')
+	ser.write(byte1)
+	ser.write(b';')
+	
 	return
 
 
@@ -152,43 +158,20 @@ label = Label(fenster, text = "Ir Sensors", borderwidth="2")
 label.place(x = 60, y = 10) #Anordnung durch Place-Manager
 
 
-ir0Label = Label(fenster, text = "-", borderwidth="2")
-ir0Label.place(x = 10, y = 120) #Anordnung durch Place-Manager
 
-ir1Label = Label(fenster, text = "-", borderwidth="2")
-ir1Label.place(x = 60, y = 120) #Anordnung durch Place-Manager
+irSensorLabel = [0 for x in range(irSensorCount)] 
+irLedButton = [0 for x in range(irSensorCount)] 
 
-ir2Label = Label(fenster, text = "-", borderwidth="2")
-ir2Label.place(x = 110, y = 120) #Anordnung durch Place-Manager
-
-ir3Label = Label(fenster, text = "-", borderwidth="2")
-ir3Label.place(x = 160, y = 120) #Anordnung durch Place-Manager
-
-ir4Label = Label(fenster, text = "-", borderwidth="2")
-ir4Label.place(x = 210, y = 120) #Anordnung durch Place-Manager
-
-
-#irLed1Button = Button(fenster, text="OK", command=callback)
-#b['command'] = text_mod
-#irLed1Button['command'] = lambda arg=1,  : text_mod(arg)
-#irLed1Button.place(x = 10, y = 150) #Anordnung durch Place-Manager
-
-
-#irLed2Button = Button(fenster, text="OK", command=callback)
-
-#irLed2Button['command'] = lambda arg=2,  : text_mod(arg)
-#irLed2Button.place(x = 60, y = 150) #Anordnung durch Place-Manager
-
-
-irLedButton = [0 for x in range(5)] 
-
-for irButton in range(5):
+for irLabel in range(irSensorCount):
+	irSensorLabel[irLabel] = Label(fenster, text = "-", borderwidth="2")
+	irSensorLabel[irLabel].place(x = 10+irLabel*50, y = 120) 
+	
+	
+for irButton in range(irSensorCount):
 	irLedButton[irButton] = Button(fenster, text="OK", command=lambda arg=irButton,  : text_mod(arg))
-	irLedButton[irButton].place(x = 10+irButton*50, y = 150) #Anordnung durch Place-Manager
+	irLedButton[irButton].place(x = 10+irButton*50, y = 150) 
 
-#label = Label(fenster, text = "Hallo Welt!", borderwidth="2")
-#label.place(x = 10, y = 10) #Anordnung durch Place-Manager
-#fenster.mainloop()	
+
 
 value = 0
 
