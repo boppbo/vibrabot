@@ -14,7 +14,7 @@ import serial
 
 irSensorCount = 5
 
-ser = serial.Serial('com49', 115200)
+
 
 global label
 
@@ -36,9 +36,22 @@ def updateWindow(vibrabotData):
 	microphonelabel.config(text=str(vibrabotData.getMicrophone()))
 	
 	
-	for irLabel in range(irSensorCount):
-		irSensorLabel[irLabel].config(text=str(vibrabotData.getIrSensor(irLabel)))
+	for irSensor in range(irSensorCount):
+		irSensorLabel[irSensor].config(text=str(vibrabotData.getIrSensor(irSensor)))
 	
+
+
+	for irSensor in range(irSensorCount):
+		
+		if (vibrabotData.getIrSensorStatus(irSensor)):
+			irLedButton[irSensor].config(text="on") 
+		else:
+			irLedButton[irSensor].config(text="off") 
+	
+	
+
+		objectTemperaturelabel.config(text = round((vibrabotData.getObjectTemperature() * 0.02 - 273.15),2))
+		ambientTemperaturelabel.config(text = round((vibrabotData.getAmbientTemperature() * 0.02 - 273.15),2))
 	
 	return
 
@@ -51,10 +64,21 @@ def readRemoteByte():
 	token = int(ser.read(1),16) * 16
 	token += int(ser.read(1),16)
 	ser.read(1)
-	
-#	print(token)
+
 
 	return (token)
+
+
+def readRemoteWord():
+	token = int(ser.read(1),16) * 4096
+	token += int(ser.read(1),16) * 256
+	token += int(ser.read(1),16) * 16
+	token += int(ser.read(1),16)
+	ser.read(1)
+
+	return (token)
+
+
 
 
 def decode(line, vibrabotData):
@@ -87,16 +111,21 @@ def decode(line, vibrabotData):
 				vibrabotData.setIrSensor(sensor,value)
 			
 			
-		#	label2.config(text=str(value))
-		
-		
-#			token = int(ser.read(1),16) * 16
-#			token += int(ser.read(1),16)
-
-
-		#print(token)
+			value = readRemoteByte()
 			
-#	label.config(text=line)
+			for sensor in range(5):
+				if (value & (1<<sensor)):
+					vibrabotData.setIrSensorStatus(sensor, True)
+				else:
+					vibrabotData.setIrSensorStatus(sensor, False)
+
+
+			value = readRemoteWord()
+			vibrabotData.setObjectTemperature(value)
+			
+			value = readRemoteWord()
+			vibrabotData.setAmbientTemperature(value)
+
 	fenster.update_idletasks()
 	fenster.update()
 
@@ -105,12 +134,18 @@ def decode(line, vibrabotData):
 	return;
 
 def text_mod(arg):
+	
+	irSensor = arg
 
 	arg = arg + 48
 	
 	byte1 = arg.to_bytes(1,byteorder='big')
 	
-	ser.write(b'#I')
+	if (vibrabotData.getIrSensorStatus(irSensor)):
+		ser.write(b'#i')
+	else:
+		ser.write(b'#I')
+		
 	ser.write(byte1)
 	ser.write(b';')
 	
@@ -127,7 +162,7 @@ hi_there.pack(side="top")
 root.mainloop()
 """
 
-
+ser = serial.Serial('com49', 115200)
 
 
 fenster = Tk()
@@ -170,6 +205,19 @@ for irLabel in range(irSensorCount):
 for irButton in range(irSensorCount):
 	irLedButton[irButton] = Button(fenster, text="OK", command=lambda arg=irButton,  : text_mod(arg))
 	irLedButton[irButton].place(x = 10+irButton*50, y = 150) 
+
+
+
+Label(fenster, text = "Object :", borderwidth="2").place(x = 10, y = 210)
+
+objectTemperaturelabel = Label(fenster, text = "0C", borderwidth="2")
+objectTemperaturelabel.place(x = 60, y = 210) #Anordnung durch Place-Manager
+
+
+Label(fenster, text = "Ambient :", borderwidth="2").place(x = 120, y = 210)
+
+ambientTemperaturelabel = Label(fenster, text = "0C", borderwidth="2")
+ambientTemperaturelabel.place(x = 170, y = 210) #Anordnung durch Place-Manager
 
 
 
