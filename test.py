@@ -148,7 +148,7 @@ root.mainloop()
 port = find_port()
 
 if port is None:
-    messagebox.showerror('Error', 'Can\'t find Arduino port.')
+    messagebox.showerror('Error', 'Can\'t find "' + arduino_device_name + '".')
     exit(0)
 
 ser = serial.Serial(port, 115200)
