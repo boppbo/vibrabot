@@ -1,78 +1,56 @@
 class VibrabotData:
-    leftLightSensor = 0
-    rightLightSensor = 0
-    microphoneValue = 0
-    irSensor = [0, 0, 0, 0, 0]
-    irSensorStatus = [False, False, False, False, False]
-    objectTemperature = 0.0
-    ambientTemperature = 0.0
+
+    def __init__(self):
+        self._left_light_sensor = 0
+        self._right_light_sensor = 0
+        self._microphone_value = 0
+        self._ir_sensor = [0, 0, 0, 0, 0]
+        self._ir_sensor_status = [False, False, False, False, False]
+        self._object_temperature = 0.0
+        self._ambient_temperature = 0.0
 
     def set_left_light_sensor(self, value):
-
-        self.leftLightSensor = value
-
-        return
+        self._left_light_sensor = value
 
     def get_left_light_sensor(self):
-
-        return self.leftLightSensor
+        return self._left_light_sensor
 
     def set_right_light_sensor(self, value):
-
-        self.rightLightSensor = value
-
-        return
+        self._right_light_sensor = value
 
     def get_right_light_sensor(self):
-
-        return self.rightLightSensor
+        return self._right_light_sensor
 
     def set_ir_sensor(self, index, value):
-
-        if index < len(self.irSensor):
-            self.irSensor[index] = value
-
-        return
+        if 0 <= index < len(self._ir_sensor):
+            self._ir_sensor[index] = value
 
     def get_ir_sensor(self, index):
-        if index < len(self.irSensor):
-            return self.irSensor[index]
-
-        return 0
+        if 0 <= index < len(self._ir_sensor):
+            return self._ir_sensor[index]
 
     def set_ir_sensor_status(self, index, status):
-
-        if index < len(self.irSensorStatus):
-            self.irSensorStatus[index] = status
-
-        return
+        if 0 <= index < len(self._ir_sensor_status):
+            self._ir_sensor_status[index] = status
 
     def get_ir_sensor_status(self, index):
-        if index < len(self.irSensorStatus):
-            return self.irSensorStatus[index]
+        if 0 <= index < len(self._ir_sensor_status):
+            return self._ir_sensor_status[index]
 
-        return 0
+    def set_microphone_value(self, value):
+        self._microphone_value = value
 
-    def set_microphone(self, value):
-        self.microphoneValue = value
-
-        return
-
-    def get_microphone(self):
-        return self.microphoneValue
+    def get_microphone_value(self):
+        return self._microphone_value
 
     def set_object_temperature(self, temperature):
-        self.objectTemperature = temperature
-
-        return
+        self._object_temperature = temperature
 
     def get_object_temperature(self):
-        return self.objectTemperature
+        return self._object_temperature
 
     def set_ambient_temperature(self, temperature):
-        self.ambientTemperature = temperature
-
-        return
+        self._ambient_temperature = temperature
 
     def get_ambient_temperature(self):
-        return self.ambientTemperature
+        return self._ambient_temperature
