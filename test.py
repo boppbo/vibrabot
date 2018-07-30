@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
+import serial.tools.list_ports
 
 from VibrabotData import *
 
@@ -152,6 +153,18 @@ def text_mod(arg):
 	return
 
 
+def find_port():
+    ports = list(serial.tools.list_ports.comports())
+
+    substring = 'Arduino'
+
+    for p in ports:
+        if substring in p[1]:
+            return p[0]
+
+    return "LOL ERROR"
+
+
 """
 root = tk.Tk()
 
@@ -162,7 +175,7 @@ hi_there.pack(side="top")
 root.mainloop()
 """
 
-ser = serial.Serial('com49', 115200)
+ser = serial.Serial(find_port(), 115200)
 
 
 fenster = Tk()
