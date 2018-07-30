@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
+from tkinter import messagebox
+
 import serial.tools.list_ports
 
 from VibrabotData import *
@@ -10,6 +12,8 @@ from VibrabotData import *
 import serial
 
 irSensorCount = 5
+
+arduino_device_name = 'Arduino LilyPad USB'
 
 global label
 
@@ -124,13 +128,11 @@ def text_mod(arg):
 def find_port():
     ports = list(serial.tools.list_ports.comports())
 
-    substring = 'Arduino'
-
     for p in ports:
-        if substring in p[1]:
+        if arduino_device_name in p[1]:
             return p[0]
 
-    return "LOL ERROR"
+    return None
 
 
 """
@@ -143,7 +145,13 @@ hi_there.pack(side="top")
 root.mainloop()
 """
 
-ser = serial.Serial(find_port(), 115200)
+port = find_port()
+
+if port is None:
+    messagebox.showerror('Error', 'Can\'t find Arduino port.')
+    exit(0)
+
+ser = serial.Serial(port, 115200)
 
 fenster = Tk()
 fenster.title("Vibrabot")
