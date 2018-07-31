@@ -7,7 +7,4 @@ def write_log(data):
     with open(file, 'w') as csvfile:
         csv.writer(csvfile, delimiter=';', lineterminator='\n').writerows(data)
 
-
-# TODO some tests, delete them when nomore needed
-stuff = [['time', 'event'], ['123', 'caboom'], ['456', 'nothing']]
-write_log(stuff)
+    return file

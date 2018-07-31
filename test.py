@@ -8,6 +8,7 @@ from tkinter import messagebox
 import serial.tools.list_ports
 
 from VibrabotData import *
+from Writer import *
 
 import serial
 
@@ -77,7 +78,7 @@ def decode(vibrabot_data):
             vibrabot_data.set_right_light_sensor(val)
 
             val = read_remote_byte()
-            vibrabot_data.set_microphone(val)
+            vibrabot_data.set_microphone_value(val)
 
             for sensor in range(5):
                 val = read_remote_byte()
@@ -119,7 +120,7 @@ def text_mod(arg):
 
 def find_port():
     """
-    Searches for the right port of Arduino LilyPad device using @arduino_device_name.
+    Searches for the right port of Arduino LilyPad device using arduino_device_name.
     :return: com port if any found, otherwise None
     """
     ports = list(serial.tools.list_ports.comports())
@@ -129,6 +130,13 @@ def find_port():
             return p[0]
 
     return None
+
+
+def write_button_action():
+    # TODO
+    stuff = [['time', 'event'], ['123', 'caboom'], ['456', 'nothing']]
+    file = write_log(stuff)
+    messagebox.showinfo('Info', 'Log saved to "' + file + '".')
 
 
 """
@@ -144,7 +152,7 @@ root.mainloop()
 port = find_port()
 
 if port is None:
-    messagebox.showerror('Error', 'Can\'t find "' + arduino_device_name + '".')
+    messagebox.showerror('Error', 'Can\'t find port for "' + arduino_device_name + '".')
     exit(0)
 
 ser = serial.Serial(port, 115200)
@@ -196,6 +204,9 @@ ambient_temperature_label.place(x=170, y=210)  # Anordnung durch Place-Manager
 value = 0
 
 data = VibrabotData()
+
+log_save_button = Button(fenster, text="save", command=lambda: write_button_action())
+log_save_button.place(x=100, y=300)
 
 while 1:
     # line = ser.read(10)
