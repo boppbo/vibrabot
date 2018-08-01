@@ -11,8 +11,8 @@ from remoteapp.Services.PortDetector import *
 
 class MainWindow(tk.Tk):
 
-    CONST_TITLE = "insert window title here"
-    CONST_SIZE = "1300x700"
+    CONST_TITLE = "insert window title here"  # TODO
+    CONST_SIZE = "1300x700"  # TODO
 
     def __init__(self):
         tk.Tk.__init__(self)
@@ -52,4 +52,5 @@ class MainWindow(tk.Tk):
                 exit(0)
 
 
+# runs the whole program
 app = MainWindow()
