@@ -2,15 +2,17 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from RealtimeDataProvider import *
+from Graph import *
 
 
 class RealtimeTab(tk.Frame):
 
-    def __init__(self, cls):
-        tk.Frame.__init__(self, cls)
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
         # super(RealtimeTab, self).__init__(cls)
+        self._data = []
         self._name = "Realtime Analysis"
-        self._provider = RealtimeDataProvider("COM15")
+        self._provider = RealtimeDataProvider("COM16")  # TODO
 
         self._label_light = Label(self, text="Light", borderwidth="2")
         self._label_light.place(x=60, y=10)  # Anordnung durch Place-Manager
@@ -51,12 +53,17 @@ class RealtimeTab(tk.Frame):
         self._ambient_temperature_label = Label(self, text="0C", borderwidth="2")
         self._ambient_temperature_label.place(x=170, y=210)  # Anordnung durch Place-Manager
 
+        self._box = Frame(self, relief=RAISED, borderwidth=1)
+        self._box.place(x=0, y=200)
+        self._graph = Graph(self._box)
+
     def get_name(self):
         return self._name
 
     def update(self):
         tk.Frame.update(self)
         vibrabot_data = self._provider.get_data()
+        self._data.append(vibrabot_data)
         self._left_light_sensor_label.config(text=str(vibrabot_data.get_left_light_sensor()))
         self._right_light_sensor_label.config(text=str(vibrabot_data.get_right_light_sensor()))
 
@@ -75,5 +82,4 @@ class RealtimeTab(tk.Frame):
             self._object_temperature_label.config(text=round((vibrabot_data.get_object_temperature() * 0.02 - 273.15), 2))
             self._ambient_temperature_label.config(text=round((vibrabot_data.get_ambient_temperature() * 0.02 - 273.15), 2))
 
-
-RealtimeDataProvider("COM15")
+        self._graph.plot(self._data)

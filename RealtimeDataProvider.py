@@ -93,6 +93,3 @@ class RealtimeDataProvider:
         self._decode(self._data)
 
         return self._data
-
-
-RealtimeDataProvider("COM15")
