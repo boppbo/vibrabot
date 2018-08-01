@@ -8,7 +8,7 @@ class PortDetector:
     CONST_DEVICE_NAME = 'Arduino LilyPad USB'
 
     @staticmethod
-    def detect_port() -> list:
+    def detect_port() -> str:
         """
         Searches for the right port of Arduino LilyPad device using arduino_device_name.
         :return: com port if any found, otherwise None
