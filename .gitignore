@@ -45,6 +45,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.noseids
 nosetests.xml
 coverage.xml
 *.cover
@@ -112,6 +113,9 @@ venv.bak/
 
 
 # End of https://www.gitignore.io/api/python
+
+### VisualStudioCode ###
+.vscode/*
 
 # ignore csv files
 *.csv
