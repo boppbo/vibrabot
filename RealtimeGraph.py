@@ -56,9 +56,3 @@ class Graph:
     def clear(self):
         self.ax.clear()
         self.canvas.draw()
-
-
-if __name__ == '__main__':
-    w = Tk()
-    g = Graph(w)
-    w.mainloop()
