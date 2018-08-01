@@ -6,12 +6,10 @@ from RealtimeDataProvider import *
 
 class ConfigTab(tk.Frame):
 
+    CONST_NAME = "Config"
+
     def __init__(self, cls):
         tk.Frame.__init__(self, cls)
-        self._name = "Config"
 
         self._label = Label(self, text="Hier koennte Ihre Werbung stehen", borderwidth="2")
         self._label.place(x=60, y=210)
-
-    def get_name(self):
-        return self._name

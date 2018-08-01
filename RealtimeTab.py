@@ -2,16 +2,22 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from RealtimeDataProvider import *
-from Graph import *
+from RealtimeGraph import *
+from RealtimeGraphData import *
+from RealtimeController import *
 
 
 class RealtimeTab(tk.Frame):
 
+    CONST_NAME = "Realtime Analysis"
+
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
-        # super(RealtimeTab, self).__init__(cls)
-        self._data = []
-        self._name = "Realtime Analysis"
+
+        self.i = 0
+        self.graph_data = RealtimeGraphData()
+        self.controller = RealtimeController()
+
         self._provider = RealtimeDataProvider("COM16")  # TODO
 
         self._label_light = Label(self, text="Light", borderwidth="2")
@@ -32,14 +38,14 @@ class RealtimeTab(tk.Frame):
         self._label_ir = Label(self, text="Ir Sensors", borderwidth="2")
         self._label_ir.place(x=60, y=10)  # Anordnung durch Place-Manager
 
-        self._ir_sensor_label = [0 for x in range(RealtimeDataProvider.ir_sensor_count)]
-        self._ir_led_button = [0 for x in range(RealtimeDataProvider.ir_sensor_count)]
+        self._ir_sensor_label = [0 for x in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT)]
+        self._ir_led_button = [0 for x in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT)]
 
-        for ir_label in range(RealtimeDataProvider.ir_sensor_count):
+        for ir_label in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT):
             self._ir_sensor_label[ir_label] = Label(self, text="-", borderwidth="2")
             self._ir_sensor_label[ir_label].place(x=10 + ir_label * 50, y=120)
 
-        for ir_button in range(RealtimeDataProvider.ir_sensor_count):
+        for ir_button in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT):
             self._ir_led_button[ir_button] = Button(self, text="OK", command=lambda arg=ir_button: text_mod(arg))
             self._ir_led_button[ir_button].place(x=10 + ir_button * 50, y=150)
 
@@ -53,26 +59,34 @@ class RealtimeTab(tk.Frame):
         self._ambient_temperature_label = Label(self, text="0C", borderwidth="2")
         self._ambient_temperature_label.place(x=170, y=210)  # Anordnung durch Place-Manager
 
+        self._check_mic = Checkbutton(self, text="microphone", variable=self.controller.mic)
+        self._check_mic.place(x=200, y=100)
+
+        self._check_mic = Checkbutton(self, text="light left", variable=self.controller.light_left)
+        self._check_mic.place(x=200, y=10)
+
+        self._check_mic = Checkbutton(self, text="light right", variable=self.controller.light_right)
+        self._check_mic.place(x=200, y=40)
+
         self._box = Frame(self, relief=RAISED, borderwidth=1)
         self._box.place(x=0, y=200)
-        self._graph = Graph(self._box)
-
-    def get_name(self):
-        return self._name
+        self._graph = Graph(self._box, self.graph_data, self.controller)
 
     def update(self):
         tk.Frame.update(self)
         vibrabot_data = self._provider.get_data()
-        self._data.append(vibrabot_data)
+        if self.i % 100 is 0:
+            self.graph_data.add(vibrabot_data)
+            # self._data.append(vibrabot_data)
         self._left_light_sensor_label.config(text=str(vibrabot_data.get_left_light_sensor()))
         self._right_light_sensor_label.config(text=str(vibrabot_data.get_right_light_sensor()))
 
         self._microphone_label.config(text=str(vibrabot_data.get_microphone_value()))
 
-        for ir_sensor in range(RealtimeDataProvider.ir_sensor_count):
+        for ir_sensor in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT):
             self._ir_sensor_label[ir_sensor].config(text=str(vibrabot_data.get_ir_sensor(ir_sensor)))
 
-        for ir_sensor in range(RealtimeDataProvider.ir_sensor_count):
+        for ir_sensor in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT):
 
             if vibrabot_data.get_ir_sensor_status(ir_sensor):
                 self._ir_led_button[ir_sensor].config(text="on")
@@ -82,4 +96,8 @@ class RealtimeTab(tk.Frame):
             self._object_temperature_label.config(text=round((vibrabot_data.get_object_temperature() * 0.02 - 273.15), 2))
             self._ambient_temperature_label.config(text=round((vibrabot_data.get_ambient_temperature() * 0.02 - 273.15), 2))
 
-        self._graph.plot(self._data)
+        if self.i % 100 == 0:
+            self._graph.plot()
+            # self._graph.plot(self._data)
+
+        self.i += 1

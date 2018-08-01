@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from RealtimeTab import *
 from ConfigTab import *
+from LogTab import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
 
@@ -10,7 +11,7 @@ from ConfigTab import *
 class MainWindow(tk.Tk):
 
     CONST_TITLE = "insert window title here"
-    CONST_SIZE = "1024x768"
+    CONST_SIZE = "1300x700"
 
     def __init__(self):
         tk.Tk.__init__(self)
@@ -27,16 +28,21 @@ class MainWindow(tk.Tk):
             rows += 1
 
         self.realt_tab = RealtimeTab(self.nb)
-        self.nb.add(self.realt_tab, text=self.realt_tab.get_name())
+        self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
 
         self.confg_tab = ConfigTab(self.nb)
-        self.nb.add(self.confg_tab, text=self.confg_tab.get_name())
+        self.nb.add(self.confg_tab, text=ConfigTab.CONST_NAME)
+
+        self.log_tab = LogTab(self.nb)
+        self.nb.add(self.log_tab, text=LogTab.CONST_NAME)
 
         while 1:
-            self.update_idletasks()
-            self.update()
-            self.realt_tab.update()
-
+            try:
+                self.update_idletasks()
+                self.update()
+                self.realt_tab.update()
+            except TclError:
+                exit(0)
 
     """
     def update(self):
