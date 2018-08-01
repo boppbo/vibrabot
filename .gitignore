@@ -119,3 +119,6 @@ venv.bak/
 
 # ignore csv files
 *.csv
+
+# IntelliJ
+.idea
