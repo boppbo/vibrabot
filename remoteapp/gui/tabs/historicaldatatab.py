@@ -30,6 +30,12 @@ class HistoricalDataController:
 
         self._writer.export(path, self._data)
         self._view.info_written(path)
+    def open(self):
+        path = filedialog.askopenfilename(
+            initialdir = "~",
+            filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
+        
+        self._data = self._writer.import_(path)
 
 
 class HistoricalDataTab(tk.Frame):

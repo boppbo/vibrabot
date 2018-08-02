@@ -47,3 +47,25 @@ class CsvSerializer():
                 raise ValueError("Invalid file")
 
         return result
+
+class CsvLogWriter():
+    CONST_PREFIX = "log_"
+    CONST_DATEFORMAT = "%y%m%d_%H%M%S"
+    CONST_EXTENSION = ".csv"
+    CONST_FILENAME = CONST_PREFIX + CONST_DATEFORMAT + CONST_EXTENSION
+
+    def __init__(self, serializer: CsvSerializer):
+        self._serializer = serializer
+
+    def export(self, path: str, data: List[Sensor]):
+        ser_data = self._serializer.serialize(data)
+
+        with open(path, 'w') as csvfile:
+            csv.writer(csvfile, delimiter=';', lineterminator='\n') \
+               .writerows(ser_data)
+        
+    def import_(self, path: str) -> List[Sensor]:
+        with open(path, 'r') as csvfile:
+            iter = csv.reader(csvfile, delimiter=';', lineterminator='\n')
+            return self._serializer.deserialize(list(iter))
+               
