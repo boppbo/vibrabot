@@ -3,38 +3,48 @@ import serial
 from tkinter import *
 from tkinter import ttk
 from RealtimeDataProvider import *
+from remoteapp.services.vibrabotcommunication import VibraBotCommunication
+from remoteapp.model.sensor import Sensor
 
 
 class ConfigTab(tk.Frame):
 
     CONST_NAME = "Config"
 
-    def __init__(self, cls, ser: serial.Serial):
+    def __init__(self, cls, com: VibraBotCommunication):
         tk.Frame.__init__(self, cls)
 
-        label_name = Label(self, text="Name: ")
-        label_name.grid(row=0, column=0)
-
-        label_name_val = Label(self, text="Insert Device Name Here")  # TODO name
-        label_name_val.grid(row=0, column=1)
-
-        label_interval = Label(self, text="Interval: ")
-        label_interval.grid(row=1, column=0)
-
-        # registering validation command
-        validate_interval = (cls.register(self._validate_interval), '%P', '%S', '%W')
-
         values = list(range(0, 65000, 10))
-        # spinbox_interval = Spinbox(self, values=values, validate='all', validatecommand=validate_interval)
-        spinbox_interval = Spinbox(self, values=values, validate='all', validatecommand=validate_interval)
-        # TODO from, to
-        spinbox_interval.grid(row=1, column=1)
 
-    @staticmethod
-    def _validate_interval(user_input, new_value, widget_name):
-        print("sfsa")
-        return S == '' or S.isdigit()
+        # self.config = com.read_config() TODO
+        self.config = [
+            Sensor(0, "c", 30, "Foo", [190, 190, 191]),
+            Sensor(1, "s", 50, "Bar", [43981])
+        ]
 
+        row = 0
+
+        header = Label(self, text="Interval, 0 to 65000")
+        header.grid(row=row, column=1, padx=4, pady=4, sticky="W")
+
+        row += 1
+
+        for i in self.config:
+            label = Label(self, text=i.label)
+            label.grid(row=row, column=0, sticky="W",  padx=4, pady=4)
+            var = StringVar()
+            spinbox = Spinbox(self, textvariable=var, values=values, justify=RIGHT)
+            var.set(i.interval)
+            spinbox.grid(row=row, column=1, padx=4, pady=4, sticky="WE")
+            row += 1
+
+        button_save = Button(self, text="save", command=lambda: self.save())
+        button_save.grid(row=row, column=1, sticky="WE", padx=4, pady=4)
+
+        row += 1
+
+    def save(self):
+        print("click")
 
 
 if __name__ == '__main__':
