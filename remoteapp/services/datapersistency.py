@@ -8,7 +8,7 @@ class CsvSerializer():
         result = []
 
         result.append(
-            ["id","label","interval","data_type","value"])
+            ["sensorid","label","interval","data_type","value"])
 
         for s in data:
             for val in s.values:
@@ -22,21 +22,28 @@ class CsvSerializer():
                 
         return result
     
-    def deserialize(self, csvData: List[List[str]]) -> List[Sensor]:
-        pass
+    def deserialize(self, csvData: List[List]) -> List[Sensor]:
+        result = []
 
-class CsvLogWriter():
-    CONST_PREFIX = "log_"
-    CONST_DATEFORMAT = "%y%m%d_%H%M%S"
-    CONST_EXTENSION = ".csv"
-    CONST_FILENAME = CONST_PREFIX + CONST_DATEFORMAT + CONST_EXTENSION
+        #Remove header line by slicing
+        for line in csvData[1:]:
+            id = line[0]
 
-    def __init__(self, serializer: CsvSerializer):
-        self._serializer = serializer
+            if (id == len(result)):
+                result.append(
+                    Sensor(
+                        id = id,
+                        label = line[1],
+                        interval = line[2],
+                        data_type = line[3],
+                        values = [ line[4] ]))
 
-    def export(self, path: str, data: List[Sensor]):
-        ser_data = self._serializer.serialize(data)
+            elif id < len(result):
+                sensor = result[id]
+                if id != sensor.id:
+                    raise ValueError("Invalid file")
+                sensor.values.append(line[4])
+            else:
+                raise ValueError("Invalid file")
 
-        with open(path, 'w') as csvfile:
-            csv.writer(csvfile, delimiter=';', lineterminator='\n') \
-               .writerows(ser_data)
+        return result
