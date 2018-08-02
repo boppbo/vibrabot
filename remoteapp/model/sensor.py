@@ -2,8 +2,8 @@ from enum import Enum
 
 class Sensor():
     CONST_DATA_TYPES = {
-        "c": "char (Byte)",
-        "s": "short (Word)"
+        "c": 2, #ascii hex char (Byte)
+        "s": 4  #ascii hex short (Word)
     }
 
     def __init__(self, id, data_type, interval, label):
