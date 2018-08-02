@@ -31,7 +31,31 @@ class VibraBotCommunication():
             signed = False)
     def _readInteger(self, size = 2):
         return self._parseInteger(self._serial.read(size))
+    def _readDataEntry(self, config: List[Sensor]):
+        # Format $<id>,<value>;
+        # id: 2 ASCII Hex characters
+        # value: Variable length of ASCII chars depending on value_type
+        self._discard_noise()
+        
+        id = self._readInteger(2)
 
+        if (id == 0xFF):
+            self._expect_semicolon()
+            raise EOFError()
+
+        self._expect_comma()
+        
+        sensor = config[id]
+
+        if (id != sensor.id):
+            raise ValueError("Sensor id not ongoing!")
+
+        data_length = Sensor.CONST_DATA_TYPES[sensor.data_type]
+        value = self._readInteger(data_length)
+        self._expect_semicolon()
+
+        sensor.values.append( value )
+        return sensor[-1]
 
     def read_config(self) -> List[Sensor]:
         # Format $<count><sensor>...<sensor>
@@ -84,39 +108,29 @@ class VibraBotCommunication():
         
         self._serial.write(bytes_msg)
 
-    def read_data(self, config: List[Sensor], live_data: bool = False):
+    def read_data(self, config: List[Sensor]):
         # $2; = READ_DATA
-        # $3; = READ_LIVE_DATA
-        self._serial.write(b"$2;" if live_data else b"$3;")
+        self._serial.write(b"$2;")
 
         # Format <entry>...<entry>$FF;
         # entry: see below
         # $FF;: Finished transmitting
         while True:
-            # Format $<id>,<value>;
-            # id: 2 ASCII Hex characters
-            # value: Variable length of ASCII chars depending on value_type
-            self._discard_noise()
-            
-            id = self._readInteger(2)
-
-            if (id == 0xFF):
-                self._expect_semicolon()
+            try:
+                self._readDataEntry(config)
+            except EOFError:
                 break
 
-            self._expect_comma()
-            
-            sensor = config[id]
+    def start_live_data(self):
+        # $3; = START_LIVE_DATA
+        self._serial.write(b"$3;")
 
-            if (id != sensor.id):
-                raise ValueError("Sensor id not ongoing!")
-
-            data_length = Sensor.CONST_DATA_TYPES[sensor.data_type]
-            value = self._readInteger(data_length)
-            self._expect_semicolon()
-
-            sensor.values.append( value )
+    def read_live_data_entry(self, config: List[Sensor]):
+        try:
+            return self._readDataEntry(config)
+        except EOFError:
+            return None
 
     def stop_live_data(self):
-        # $4; = READ_LIVE_DATA
+        # $4; = STOP_LIVE_DATA
         self._serial.write(b"$4;")

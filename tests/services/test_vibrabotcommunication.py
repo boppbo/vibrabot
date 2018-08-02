@@ -56,6 +56,8 @@ class TestVibrabotCommunication(TestCase):
 
         self.out.read_data(self.config)
         
+        self.assertEquals("$2;", self.mock.written_messages)
+        
         self.assertEqual(3, len(self.config[0].values))
         self.assertEqual(0xBE, self.config[0].values[0])
         self.assertEqual(0xBE, self.config[0].values[1])
@@ -65,6 +67,10 @@ class TestVibrabotCommunication(TestCase):
         self.assertEqual(0xABCD, self.config[1].values[0])
         
 
+    def test_start_live_data(self):
+        self.out.start_live_data()
+        self.assertEquals("$3;", self.mock.written_messages)
+    
     def test_stop_live_data(self):
         self.out.stop_live_data()
         self.assertEquals("$4;", self.mock.written_messages)
