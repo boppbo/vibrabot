@@ -16,7 +16,7 @@ class RealtimeTab(tk.Frame):
     CONST_COLOR_LIGHT_LEFT = "gold2"
     CONST_COLOR_LIGHT_RIGHT = "gold3"
     CONST_COLOR_MIC = "blue"
-    CONST_COLOR_IR = ["gray10", "gray20", "gray30", "gray40", "gray50"]
+    CONST_COLOR_IR = ["#ff3385", "#ff1a75", "#ff0066", "#e6005c", "#cc0052"]
     CONST_COLOR_TMP_OBJ = "firebrick3"
     CONST_COLOR_TMP_AMB = "firebrick4"
 
