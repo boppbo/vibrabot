@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk, messagebox
+import serial
 from RealtimeTab import *
-from ConfigTab import *
-from remoteapp.gui.log import LogTab
+from remoteapp.gui.tabs.configtab import ConfigTab
+from remoteapp.gui.tabs.historicaldatatab import HistoricalDataTab
 from remoteapp.services.portdetector import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
@@ -21,6 +22,7 @@ class MainWindow(tk.Tk):
         if port is None:
             messagebox.showerror('Error', 'Can\'t find port for device "' + PortDetector.CONST_DEVICE_NAME + '".')
             exit(0)
+        ser = serial.Serial(port, 115200)
 
         self.title(MainWindow.CONST_TITLE)
         self.geometry(MainWindow.CONST_SIZE)
@@ -34,14 +36,14 @@ class MainWindow(tk.Tk):
             self.columnconfigure(rows, weight=1)
             rows += 1
 
-        self.realt_tab = RealtimeTab(self.nb, port)
+        self.realt_tab = RealtimeTab(self.nb, ser)
         self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
 
-        self.confg_tab = ConfigTab(self.nb)
+        self.confg_tab = ConfigTab(self.nb, ser)
         self.nb.add(self.confg_tab, text=ConfigTab.CONST_NAME)
 
-        self.log_tab = LogTab(self.nb)
-        self.nb.add(self.log_tab, text=LogTab.CONST_NAME)
+        self.log_tab = HistoricalDataTab(self.nb, ser)
+        self.nb.add(self.log_tab, text=HistoricalDataTab.CONST_NAME)
 
         while 1:
             try:

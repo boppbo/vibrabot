@@ -1,6 +1,5 @@
 import time
 import csv
-from tkinter import filedialog
 from typing import List
 from remoteapp.model.sensor import Sensor
 
@@ -17,17 +16,9 @@ class CsvLogWriter():
     def __init__(self, serializer: CsvSerializer):
         self._serializer = serializer
 
-    def export(self, data: List[Sensor]) -> str:
-        path = filedialog.asksaveasfilename(
-            initialdir = "~",
-            initialfile = time.strftime(CsvLogWriter.CONST_FILENAME),
-            defaultextension = CsvLogWriter.CONST_EXTENSION,
-            filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
-
+    def export(self, path: str, data: List[Sensor]):
         ser_data = self._serializer.serialize(data)
 
         with open(path, 'w') as csvfile:
             csv.writer(csvfile, delimiter=';', lineterminator='\n') \
                .writerows(ser_data)
-
-        return path

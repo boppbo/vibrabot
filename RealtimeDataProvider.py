@@ -6,9 +6,8 @@ class RealtimeDataProvider:
 
     CONST_SENSOR_IR_COUNT = 5
 
-    def __init__(self, port):
-        self._port = port
-        self._ser = serial.Serial(port, 115200)
+    def __init__(self, serial: serial.Serial):
+        self._ser = serial
         self._data = VibrabotData()
 
     def _read_remote_byte(self):

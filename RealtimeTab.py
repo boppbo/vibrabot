@@ -11,14 +11,14 @@ class RealtimeTab(tk.Frame):
 
     CONST_NAME = "Realtime Analysis"
 
-    def __init__(self, parent, port):
+    def __init__(self, parent, serial: serial.Serial):
         tk.Frame.__init__(self, parent)
 
         self.i = 0
         self.graph_data = RealtimeGraphData()
         self.controller = RealtimeController()
 
-        self._provider = RealtimeDataProvider(port)
+        self._provider = RealtimeDataProvider(serial)
 
         self._label_light = Label(self, text="Light", borderwidth="2")
         self._label_light.place(x=60, y=10)  # Anordnung durch Place-Manager

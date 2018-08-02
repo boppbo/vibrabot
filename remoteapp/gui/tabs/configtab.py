@@ -1,4 +1,5 @@
 import tkinter as tk
+import serial
 from tkinter import *
 from tkinter import ttk
 from RealtimeDataProvider import *
@@ -8,7 +9,7 @@ class ConfigTab(tk.Frame):
 
     CONST_NAME = "Config"
 
-    def __init__(self, cls):
+    def __init__(self, cls, ser: serial.Serial):
         tk.Frame.__init__(self, cls)
 
         label_name = Label(self, text="Name: ")
