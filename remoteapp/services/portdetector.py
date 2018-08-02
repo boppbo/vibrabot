@@ -2,10 +2,13 @@ import serial
 import serial.tools.list_ports
 from typing import List
 
-class PortDetector():
+
+class PortDetector:
+
     CONST_DEVICE_NAME = 'Arduino LilyPad USB'
-        
-    def detect_port(self) -> list:
+
+    @staticmethod
+    def detect_port() -> str:
         """
         Searches for the right port of Arduino LilyPad device using arduino_device_name.
         :return: com port if any found, otherwise None
@@ -13,9 +16,9 @@ class PortDetector():
         ports = list(serial.tools.list_ports.comports())
 
         for p in ports:
-            #p[1] Description
+            # p[1] Description
             if PortDetector.CONST_DEVICE_NAME in p[1]:
-                #p[0] COM??
+                # p[0] COM??
                 return p[0]
 
         return None
