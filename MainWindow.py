@@ -4,7 +4,7 @@ from tkinter import ttk
 from RealtimeTab import *
 from ConfigTab import *
 from LogTab import *
-from remoteapp.Services.PortDetector import *
+from remoteapp.services.portdetector import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
 
