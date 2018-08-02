@@ -4,6 +4,7 @@ import serial
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox, Button
+from remoteapp.model.sensor import Sensor
 from remoteapp.services.datapersistency import CsvLogWriter, CsvSerializer
 from remoteapp.services.portdetector import PortDetector
 from remoteapp.services.vibrabotcommunication import VibraBotCommunication
@@ -15,6 +16,10 @@ class HistoricalDataController:
 
         commService = VibraBotCommunication(serial)
         #config = commService.read_config()
+        self._data = [
+            Sensor(0,"c", 30, "Foo", [190, 190, 191]),
+            Sensor(1,"s", 50, "Bar", [43981])
+        ]
 
     def save(self):
         path = filedialog.asksaveasfilename(
@@ -23,7 +28,7 @@ class HistoricalDataController:
             defaultextension = CsvLogWriter.CONST_EXTENSION,
             filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
 
-        self._writer.export(path, None)
+        self._writer.export(path, self._data)
         self._view.info_written(path)
 
 

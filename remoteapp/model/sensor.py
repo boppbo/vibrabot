@@ -6,12 +6,12 @@ class Sensor():
         "s": 4  #ascii hex short (Word)
     }
 
-    def __init__(self, id, data_type, interval, label):
+    def __init__(self, id, data_type, interval, label, values = []):
         self.id = id
         self.label = label
         self.interval = interval
         self.data_type = data_type
-        self.values = []
+        self.values = values
 
     @property
     def data_type(self) -> str:

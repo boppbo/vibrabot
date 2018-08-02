@@ -39,5 +39,5 @@ class ConfigTab(tk.Frame):
 
 if __name__ == '__main__':
     w = Tk()
-    ConfigTab(w).pack()
+    ConfigTab(None, w).pack()
     w.mainloop()

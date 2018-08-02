@@ -5,7 +5,25 @@ from remoteapp.model.sensor import Sensor
 
 class CsvSerializer():
     def serialize(self, data: List[Sensor]):
-        return [["1", "2"], ["3", "4"]]
+        result = []
+
+        result.append(
+            ["id","label","interval","data_type","value"])
+
+        for s in data:
+            for val in s.values:
+                line = []
+                line.append(s.id)
+                line.append(s.label)
+                line.append(s.interval)
+                line.append(s.data_type)
+                line.append(val)
+                result.append(line)
+                
+        return result
+    
+    def deserialize(self, csvData: List[List[str]]) -> List[Sensor]:
+        pass
 
 class CsvLogWriter():
     CONST_PREFIX = "log_"
