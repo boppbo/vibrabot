@@ -25,7 +25,7 @@ class MainWindow(tk.Tk):
         ser = serial.Serial(port, 115200)
 
         self.title(MainWindow.CONST_TITLE)
-        self.geometry(MainWindow.CONST_SIZE)
+        # self.geometry(MainWindow.CONST_SIZE)
         self.nb = ttk.Notebook(self)
         self.nb.grid(row=1, column=0, columnspan=50, rowspan=49, sticky="NESW")
 
