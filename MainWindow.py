@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from RealtimeTab import *
 from ConfigTab import *
-from LogTab import *
+from remoteapp.gui.log import LogTab
 from remoteapp.services.portdetector import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
