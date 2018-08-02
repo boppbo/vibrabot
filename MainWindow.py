@@ -6,6 +6,7 @@ from RealtimeTab import *
 from remoteapp.gui.tabs.configtab import ConfigTab
 from remoteapp.gui.tabs.historicaldatatab import HistoricalDataTab
 from remoteapp.services.portdetector import *
+from remoteapp.services.vibrabotcommunication import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
 
@@ -23,6 +24,7 @@ class MainWindow(tk.Tk):
             messagebox.showerror('Error', 'Can\'t find port for device "' + PortDetector.CONST_DEVICE_NAME + '".')
             exit(0)
         ser = serial.Serial(port, 115200)
+        com = VibraBotCommunication(ser)
 
         self.title(MainWindow.CONST_TITLE)
         # self.geometry(MainWindow.CONST_SIZE)
@@ -39,7 +41,7 @@ class MainWindow(tk.Tk):
         self.realt_tab = RealtimeTab(self.nb, ser)
         self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
 
-        self.confg_tab = ConfigTab(self.nb, ser)
+        self.confg_tab = ConfigTab(self.nb, com)
         self.nb.add(self.confg_tab, text=ConfigTab.CONST_NAME)
 
         self.log_tab = HistoricalDataTab(self.nb, ser)
