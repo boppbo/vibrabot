@@ -33,6 +33,7 @@ class HistoricalDataController:
             filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
         
         self._data = self._writer.import_(path)
+        self._view.updateAllData(self._data)
 
 
 class HistoricalDataTab(tk.Frame):
@@ -40,20 +41,20 @@ class HistoricalDataTab(tk.Frame):
     
     def __init__(self, cls, commService: VibraBotCommunication):
         tk.Frame.__init__(self, cls)
-        
+
         log_open_button = Button(self, text="open", command=lambda: self._controller.open())
         log_open_button.pack()
 
         log_save_button = Button(self, text="save", command=lambda: self._controller.save())
         log_save_button.pack()
 
-        self.log_graph = Graph(self)
+        self.log_graph = Graph(self, commService.read_config())
 
         self._controller = HistoricalDataController(commService, self)
+
 
     def info_written(self, filename: str):
         messagebox.showinfo('Info', 'Log saved to "' + filename + '".')
 
     def updateAllData(self, config: List[Sensor]):
-        self.log_graph.clear()
         self.log_graph.plot(config)
