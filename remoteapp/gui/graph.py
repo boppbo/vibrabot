@@ -32,6 +32,7 @@ class Graph:
     CONST_COLOR_DEFAULT = "#000000"
 
     def __init__(self, master, config: List[Sensor]):
+        self.config = config
         self.frame = tk.Frame(master)
         self.frame.pack()
         self.enabled = []
