@@ -15,9 +15,9 @@ matplotlib.use('TkAgg')
 
 class Graph:
 
-    CONST_GRID_NAME = "insert grid name here"  # TODO
-    CONST_XAXIS_NAME = "X"  # TODO
-    CONST_YAXIS_NAME = "Y"  # TODO
+    CONST_GRAPH_NAME = "log data"
+    CONST_XAXIS_NAME = "time [ms]"
+    CONST_YAXIS_NAME = "value"
     CONST_YAXIS_MAX = 260
     CONST_COLORS = ["#cccc00",  # left light
                     "#666600",  # right light
@@ -61,7 +61,7 @@ class Graph:
 
         fig = Figure(figsize=(12, 4))
         self.ax = fig.add_subplot(111)
-        self.ax.set_title(Graph.CONST_GRID_NAME, fontsize=16)
+        self.ax.set_title(Graph.CONST_GRAPH_NAME, fontsize=16)
         self.ax.set_xlabel(Graph.CONST_XAXIS_NAME, fontsize=14)
         self.ax.set_ylabel(Graph.CONST_YAXIS_NAME, fontsize=14)
 
@@ -76,8 +76,6 @@ class Graph:
 
         config = self.config
         self.clear()
-
-        checkboxes = List[Checkbutton]
 
         for i in range(len(config)):
             if i > len(Graph.CONST_COLORS):
@@ -101,12 +99,15 @@ class Graph:
             for val in range(len(self.config[i].values)):
                 values.append(self.config[i][val][2])
 
-
             if self.enabled[i].get():
                 self.ax.plot(
                     np.arange(0, config[i].interval * len(config[i].values), config[i].interval),
                     values,
                     color=config[i].color)
+
+        self.ax.set_title(Graph.CONST_GRAPH_NAME, fontsize=16)
+        self.ax.set_xlabel(Graph.CONST_XAXIS_NAME, fontsize=14)
+        self.ax.set_ylabel(Graph.CONST_YAXIS_NAME, fontsize=14)
 
         self.canvas.draw()
 
