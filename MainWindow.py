@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-#from RealtimeTab import *
+from remoteapp.gui.tabs.realtimetab import *
 from remoteapp.gui.tabs.configtab import ConfigTab
 from remoteapp.gui.tabs.historicaldatatab import HistoricalDataTab
 from remoteapp.services.connection import ConnectionFactory
@@ -42,14 +42,14 @@ class MainWindow(tk.Tk):
 
         # Order is important
         # Realtime has to be last as it blocks communication
-        #self.realt_tab = RealtimeTab(self.nb, com)
-        #self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
+        self.realt_tab = RealtimeTab(self.nb, com)
+        self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
 
         while 1:
             try:
                 self.update_idletasks()
                 self.update()
-                #self.realt_tab.update()
+                self.realt_tab.refresh()
             except tk.TclError:
                 exit(0)
 
