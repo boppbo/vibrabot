@@ -19,21 +19,21 @@ class Graph:
     CONST_XAXIS_NAME = "X"  # TODO
     CONST_YAXIS_NAME = "Y"  # TODO
     CONST_YAXIS_MAX = 260
-    CONST_COLORS = ["#808000",  # left light
+    CONST_COLORS = ["#cccc00",  # left light
                     "#666600",  # right light
-                    "blue",  # mic
-                    "#ff3385",  # ir 1
-                    "#ff1a75",  # ir 2
-                    "#ff0066",  # ir 3
-                    "#e6005c",  # ir 4
-                    "#cc0052",  # ir 5
-                    "#ff3385",  # led 1
-                    "#ff1a75",  # led 2
-                    "#ff0066",  # led 3
-                    "#e6005c",  # led 4
-                    "#cc0052",  # led 5
+                    "#3366ff",  # mic
+                    "#d966ff",  # ir 1
+                    "#cc33ff",  # ir 2
+                    "#bf00ff",  # ir 3
+                    "#9900cc",  # ir 4
+                    "#730099",  # ir 5
+                    "#5cd65c",  # led 1
+                    "#33cc33",  # led 2
+                    "#29a329",  # led 3
+                    "#1f7a1f",  # led 4
+                    "#145214",  # led 5
                     "#e60000",  # temp obj
-                    "#cc0000",  # temp amb
+                    "#800000",  # temp amb
                     ]
     CONST_COLOR_DEFAULT = "#000000"
 
@@ -97,11 +97,19 @@ class Graph:
         self.ax.set_xlim(0, max_x, 100)
 
         for i in range(len(config)):
+            values = []
+            for val in range(len(self.config[i].values)):
+                values.append(self.config[i][val][2])
+
+
             if self.enabled[i].get():
-                self.ax.plot(np.arange(0, config[i].interval * len(config[i].values), config[i].interval), config[i].values, color=config[i].color)
+                self.ax.plot(
+                    np.arange(0, config[i].interval * len(config[i].values), config[i].interval),
+                    values,
+                    color=config[i].color)
 
         self.canvas.draw()
 
     def clear(self):
         self.ax.clear()
-        self.canvas.draw()
+        # self.canvas.draw()

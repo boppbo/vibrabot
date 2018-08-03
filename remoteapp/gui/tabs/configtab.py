@@ -17,7 +17,7 @@ class ConfigTab(tk.Frame):
         row = 0
 
         header = tk.Label(self, text="Decimal Interval from 0 to 65000 in ms, must be divisible by 10")
-        header.grid(row=row, column=1, padx=4, pady=4, sticky="W")
+        header.grid(row=row, column=0, columnspan=3, padx=4, pady=4, sticky="W")
         row += 1
 
         for sensor in self._config:
@@ -25,14 +25,14 @@ class ConfigTab(tk.Frame):
             label.grid(row=row, column=0, sticky="W",  padx=4, pady=4)
             
             sensor.var = tk.IntVar()
-            spinbox = tk.Spinbox(self, textvariable=sensor.var, values=ConfigTab._allowed_interval_values, justify=tk.RIGHT)
+            spinbox = tk.Spinbox(self, textvariable=sensor.var, values=ConfigTab._allowed_interval_values, justify=tk.RIGHT, width=2)
             sensor.var.set(sensor.interval)
             
             spinbox.grid(row=row, column=1, padx=4, pady=4, sticky="WE")
             row += 1
 
         button_save = tk.Button(self, text="save", command=lambda: self.save())
-        button_save.grid(row=row, column=1, sticky="WE", padx=4, pady=4)
+        button_save.grid(row=row, column=0, columnspan=2, sticky="WE", padx=4, pady=4)
         row += 1
 
     def save(self):

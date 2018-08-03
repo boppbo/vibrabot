@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox, Button
+from tkinter import Frame
 from remoteapp.model.sensor import Sensor
 from remoteapp.services.datapersistency import CsvLogWriter, CsvSerializer
 from remoteapp.services.vibrabotcommunication import VibraBotCommunication
@@ -43,12 +44,14 @@ class HistoricalDataTab(tk.Frame):
         tk.Frame.__init__(self, cls)
 
         log_open_button = Button(self, text="open", command=lambda: self._controller.open())
-        log_open_button.pack()
+        log_open_button.grid(row=0, column=0, sticky="WE")
 
         log_save_button = Button(self, text="save", command=lambda: self._controller.save())
-        log_save_button.pack()
+        log_save_button.grid(row=0, column=1, sticky="WE")
 
-        self.log_graph = Graph(self, commService.read_config())
+        frame = Frame(self)
+        self.log_graph = Graph(frame, commService.read_config())
+        frame.grid(row=1, column=0, columnspan=2)
 
         self._controller = HistoricalDataController(commService, self)
 
