@@ -1,16 +1,12 @@
 import tkinter as tk
-from tkinter import *
-from tkinter import ttk, messagebox
-import serial
-from RealtimeTab import *
+from tkinter import ttk
+#from RealtimeTab import *
 from remoteapp.gui.tabs.configtab import ConfigTab
 from remoteapp.gui.tabs.historicaldatatab import HistoricalDataTab
 from remoteapp.services.connection import ConnectionFactory
-from remoteapp.services.vibrabotcommunication import *
+from remoteapp.services.vibrabotcommunication import VibraBotCommunication
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
-
-
 class MainWindow(tk.Tk):
 
     CONST_TITLE = "insert window title here"  # TODO
@@ -22,7 +18,7 @@ class MainWindow(tk.Tk):
         connFactory = ConnectionFactory()
         port = connFactory.detect_port()
         if port is None:
-            messagebox.showerror('Error', 'Can\'t find port for device "' + ConnectionFactory.CONST_DEVICE_NAME + '".')
+            tk.messagebox.showerror('Error', 'Can\'t find port for device "' + ConnectionFactory.CONST_DEVICE_NAME + '".')
             exit(0)
         com = VibraBotCommunication(connFactory.open_connection(port))
 
@@ -54,7 +50,7 @@ class MainWindow(tk.Tk):
                 self.update_idletasks()
                 self.update()
                 #self.realt_tab.update()
-            except TclError:
+            except tk.TclError:
                 exit(0)
 
 

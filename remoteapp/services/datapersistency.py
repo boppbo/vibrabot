@@ -27,22 +27,22 @@ class CsvSerializer():
 
         #Remove header line by slicing
         for line in csvData[1:]:
-            id = line[0]
+            id = int(line[0])
 
             if (id == len(result)):
                 result.append(
                     Sensor(
                         id = id,
                         label = line[1],
-                        interval = line[2],
+                        interval = int(line[2]),
                         data_type = line[3],
-                        values = [ line[4] ]))
+                        values = [ int(line[4]) ]))
 
             elif id < len(result):
                 sensor = result[id]
                 if id != sensor.id:
                     raise ValueError("Invalid file")
-                sensor.values.append(line[4])
+                sensor.values.append(int(line[4]))
             else:
                 raise ValueError("Invalid file")
 
