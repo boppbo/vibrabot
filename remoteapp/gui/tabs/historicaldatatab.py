@@ -26,15 +26,17 @@ class HistoricalDataController:
             defaultextension = CsvLogWriter.CONST_EXTENSION,
             filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
 
-        self._writer.export(path, self._data)
-        self._view.info_written(path)
+        if len(path) > 0:
+            self._writer.export(path, self._data)
+            self._view.info_written(path)
     def open(self):
         path = filedialog.askopenfilename(
             initialdir = "~",
             filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
         
-        self._data = self._writer.import_(path)
-        self._view.updateAllData(self._data)
+        if len(path) > 0:
+            self._data = self._writer.import_(path)
+            self._view.updateAllData(self._data)
 
 
 class HistoricalDataTab(tk.Frame):
