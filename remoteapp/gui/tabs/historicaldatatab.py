@@ -12,8 +12,8 @@ class HistoricalDataController:
         self._view = view
         self._writer = CsvLogWriter(CsvSerializer())
 
-        config = commService.read_config()
-        self._data = commService.read_data(config)
+        self._data = commService.read_config()
+        commService.read_data(self._data)
 
     def save(self):
         path = filedialog.asksaveasfilename(
