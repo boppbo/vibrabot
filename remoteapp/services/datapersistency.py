@@ -29,7 +29,13 @@ class CsvSerializer():
         for line in csvData[1:]:
             id = int(line[0])
 
-            if (id == len(result)):
+            inserted = False
+            for sensor in result:
+                if sensor.id == id:
+                    inserted = True
+                    sensor.values.append(int(line[4]))
+        
+            if (not inserted):
                 result.append(
                     Sensor(
                         id = id,
@@ -37,14 +43,6 @@ class CsvSerializer():
                         interval = int(line[2]),
                         data_type = line[3],
                         values = [ int(line[4]) ]))
-
-            elif id < len(result):
-                sensor = result[id]
-                if id != sensor.id:
-                    raise ValueError("Invalid file")
-                sensor.values.append(int(line[4]))
-            else:
-                raise ValueError("Invalid file")
 
         return result
 
@@ -54,8 +52,9 @@ class CsvLogWriter():
     CONST_EXTENSION = ".csv"
     CONST_FILENAME = CONST_PREFIX + CONST_DATEFORMAT + CONST_EXTENSION
 
-    def __init__(self, serializer: CsvSerializer):
+    def __init__(self, baseConfig: List[Sensor], serializer: CsvSerializer):
         self._serializer = serializer
+        self._config = baseConfig
 
     def export(self, path: str, data: List[Sensor]):
         ser_data = self._serializer.serialize(data)
@@ -67,5 +66,14 @@ class CsvLogWriter():
     def import_(self, path: str) -> List[Sensor]:
         with open(path, 'r') as csvfile:
             iter = csv.reader(csvfile, delimiter=';', lineterminator='\n')
-            return self._serializer.deserialize(list(iter))
+            config = self._serializer.deserialize(list(iter))
+            for cfg in self._config:
+                cfg.values = []
+                cfg.interval = 0
+
+                for readcfg in config:
+                    if readcfg.id == cfg.id:
+                        cfg.interval = readcfg.interval
+                        cfg.values = readcfg.values
+            return self._config
                

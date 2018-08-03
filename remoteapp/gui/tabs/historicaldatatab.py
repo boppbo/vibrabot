@@ -13,11 +13,12 @@ from remoteapp.gui.graph import Graph
 class HistoricalDataController:
     def __init__(self, commService: VibraBotCommunication,  view):
         self._view = view
-        self._writer = CsvLogWriter(CsvSerializer())
+        self._writer = CsvLogWriter(commService.read_config(), CsvSerializer())
 
         self._data = commService.read_config()
         commService.read_data(self._data)
         self._view.updateAllData(self._data)
+
 
     def save(self):
         path = filedialog.asksaveasfilename(

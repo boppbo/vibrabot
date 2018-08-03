@@ -53,7 +53,6 @@ class Graph:
                     borderwidth=2,
                     fg=Graph.CONST_COLORS[i],
                     variable=self.enabled[i],
-                    state=None if config[i].interval != 0 else DISABLED,
                     command=lambda: self.plot(None)))
             self.checkboxes[i].grid(row=i, column=0, sticky="W")
 
@@ -73,6 +72,10 @@ class Graph:
 
         if config is not None:
             self.config = config
+            #for i in range(len(config)):
+            #    self.checkboxes[i].config(state=None if config[i].interval != 0 else DISABLED)
+            for i in range(len(config)):                
+                self.enabled[i].set(config[i].interval != 0)
 
         config = self.config
         self.clear()
@@ -99,7 +102,7 @@ class Graph:
             for val in range(len(self.config[i].values)):
                 values.append(self.config[i][val][2])
 
-            if self.enabled[i].get():
+            if self.enabled[i].get() and len(config[i].values):
                 self.ax.plot(
                     np.arange(0, config[i].interval * len(config[i].values), config[i].interval),
                     values,
