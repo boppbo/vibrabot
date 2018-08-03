@@ -6,19 +6,13 @@ from RealtimeDataProvider import *
 from RealtimeGraph import *
 from RealtimeGraphData import *
 from RealtimeController import *
+from remoteapp.services.colors import *
 import serial
 
 
 class RealtimeTab(tk.Frame):
 
     CONST_NAME = "Realtime Analysis"
-
-    CONST_COLOR_LIGHT_LEFT = "gold2"
-    CONST_COLOR_LIGHT_RIGHT = "gold3"
-    CONST_COLOR_MIC = "blue"
-    CONST_COLOR_IR = ["#ff3385", "#ff1a75", "#ff0066", "#e6005c", "#cc0052"]
-    CONST_COLOR_TMP_OBJ = "firebrick3"
-    CONST_COLOR_TMP_AMB = "firebrick4"
 
     def __init__(self, parent, ser: serial.Serial):
         tk.Frame.__init__(self, parent)
@@ -33,7 +27,7 @@ class RealtimeTab(tk.Frame):
 
         row = 0
 
-        self._check_light_left = Checkbutton(self, text="Left Light Sensor:", borderwidth=2, fg=RealtimeTab.CONST_COLOR_LIGHT_LEFT, variable=self.controller.light_left)
+        self._check_light_left = Checkbutton(self, text="Left Light Sensor:", borderwidth=2, fg=Colors.CONST_COLOR_LIGHT_LEFT, variable=self.controller.light_left)
         self._check_light_left.grid(row=row, column=0, sticky="W")
 
         self._left_light_sensor_value = Label(self, text="-1", borderwidth="2")
@@ -41,7 +35,7 @@ class RealtimeTab(tk.Frame):
 
         row += 1
 
-        self._check_light_right = Checkbutton(self, text="Right Light Sensor:", borderwidth=2, fg=RealtimeTab.CONST_COLOR_LIGHT_RIGHT, variable=self.controller.light_right)
+        self._check_light_right = Checkbutton(self, text="Right Light Sensor:", borderwidth=2, fg=Colors.CONST_COLOR_LIGHT_RIGHT, variable=self.controller.light_right)
         self._check_light_right.grid(row=row, column=0, sticky="W")
 
         self._right_light_sensor_value = Label(self, text="-1", borderwidth="2")
@@ -49,7 +43,7 @@ class RealtimeTab(tk.Frame):
 
         row += 1
 
-        self._check_mic = Checkbutton(self, text="Microphone:", fg=RealtimeTab.CONST_COLOR_MIC, variable=self.controller.mic)
+        self._check_mic = Checkbutton(self, text="Microphone:", fg=Colors.CONST_COLOR_MIC, variable=self.controller.mic)
         self._check_mic.grid(row=row, column=0, sticky="W")
 
         self._microphone_label = Label(self, text="-1", borderwidth="2")
@@ -65,7 +59,7 @@ class RealtimeTab(tk.Frame):
 
         for ir_label in range(RealtimeDataProvider.CONST_SENSOR_IR_COUNT):
 
-            self._ir_sensor_check[ir_label] = Checkbutton(self, text="IR Sensor " + str(ir_label + 1) + ":", fg=RealtimeTab.CONST_COLOR_IR[ir_label], variable=self.controller.ir[ir_label])
+            self._ir_sensor_check[ir_label] = Checkbutton(self, text="IR Sensor " + str(ir_label + 1) + ":", fg=Colors.CONST_COLOR_IR[ir_label], variable=self.controller.ir[ir_label])
             self._ir_sensor_check[ir_label].grid(row=row, column=0, sticky="W")
 
             self._ir_sensor_label[ir_label] = Label(self, text="-1", borderwidth="2")
@@ -73,7 +67,7 @@ class RealtimeTab(tk.Frame):
 
             row += 1
 
-        self._temp_obj_label = Checkbutton(self, text="Object Temperature:", fg=RealtimeTab.CONST_COLOR_TMP_OBJ, variable=self.controller.tmp_obj)
+        self._temp_obj_label = Checkbutton(self, text="Object Temperature:", fg=Colors.CONST_COLOR_TMP_OBJ, variable=self.controller.tmp_obj)
         self._temp_obj_label.grid(row=row, column=0, sticky="W")
 
         self._temp_obj_val = Label(self, text="-1", borderwidth="2")
@@ -81,7 +75,7 @@ class RealtimeTab(tk.Frame):
 
         row += 1
 
-        self._temp_amb_label = Checkbutton(self, text="Ambient Temperature:", fg=RealtimeTab.CONST_COLOR_TMP_AMB, variable=self.controller.tmp_amb)
+        self._temp_amb_label = Checkbutton(self, text="Ambient Temperature:", fg=Colors.CONST_COLOR_TMP_AMB, variable=self.controller.tmp_amb)
         self._temp_amb_label.grid(row=row, column=0, sticky="W")
 
         self._temp_amb_val = Label(self, text="-1", borderwidth="2")

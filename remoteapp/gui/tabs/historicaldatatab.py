@@ -1,3 +1,4 @@
+from typing import List
 import time, csv
 import tkinter as tk
 from tkinter import ttk
@@ -6,6 +7,7 @@ from tkinter import messagebox, Button
 from remoteapp.model.sensor import Sensor
 from remoteapp.services.datapersistency import CsvLogWriter, CsvSerializer
 from remoteapp.services.vibrabotcommunication import VibraBotCommunication
+from remoteapp.gui.graph import Graph
 
 class HistoricalDataController:
     def __init__(self, commService: VibraBotCommunication,  view):
@@ -38,8 +40,6 @@ class HistoricalDataTab(tk.Frame):
     
     def __init__(self, cls, commService: VibraBotCommunication):
         tk.Frame.__init__(self, cls)
-
-        self._controller = HistoricalDataController(commService, self)
         
         log_open_button = Button(self, text="open", command=lambda: self._controller.open())
         log_open_button.pack()
@@ -47,8 +47,13 @@ class HistoricalDataTab(tk.Frame):
         log_save_button = Button(self, text="save", command=lambda: self._controller.save())
         log_save_button.pack()
 
+        self.log_graph = Graph(self)
+
+        self._controller = HistoricalDataController(commService, self)
+
     def info_written(self, filename: str):
         messagebox.showinfo('Info', 'Log saved to "' + filename + '".')
 
-    def updateAllData(self, config: List[Sensor] ):
-        #self._graph = LogGraph(self, None, None)  # TODO
+    def updateAllData(self, config: List[Sensor]):
+        self.log_graph.clear()
+        self.log_graph.plot(config)
