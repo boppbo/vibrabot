@@ -14,6 +14,7 @@ class HistoricalDataController:
 
         self._data = commService.read_config()
         commService.read_data(self._data)
+        self._view.updateAllData(self._data)
 
     def save(self):
         path = filedialog.asksaveasfilename(
@@ -46,6 +47,8 @@ class HistoricalDataTab(tk.Frame):
         log_save_button = Button(self, text="save", command=lambda: self._controller.save())
         log_save_button.pack()
 
-        #self._graph = LogGraph(self, None, None)  # TODO
     def info_written(self, filename: str):
         messagebox.showinfo('Info', 'Log saved to "' + filename + '".')
+
+    def updateAllData(self, config: List[Sensor] ):
+        #self._graph = LogGraph(self, None, None)  # TODO
