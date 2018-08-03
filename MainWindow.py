@@ -5,7 +5,7 @@ import serial
 from RealtimeTab import *
 from remoteapp.gui.tabs.configtab import ConfigTab
 from remoteapp.gui.tabs.historicaldatatab import HistoricalDataTab
-from remoteapp.services.portdetector import *
+from remoteapp.services.connection import ConnectionFactory
 from remoteapp.services.vibrabotcommunication import *
 
 # https://smallguysit.com/index.php/2017/03/15/python-tkinter-create-tabs-notebook-widget/
@@ -19,12 +19,12 @@ class MainWindow(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
 
-        port = PortDetector.detect_port()
+        connFactory = ConnectionFactory()
+        port = connFactory.detect_port()
         if port is None:
-            messagebox.showerror('Error', 'Can\'t find port for device "' + PortDetector.CONST_DEVICE_NAME + '".')
+            messagebox.showerror('Error', 'Can\'t find port for device "' + ConnectionFactory.CONST_DEVICE_NAME + '".')
             exit(0)
-        ser = serial.Serial(port, 115200)
-        com = VibraBotCommunication(ser)
+        com = VibraBotCommunication(connFactory.open_connection(port))
 
         self.title(MainWindow.CONST_TITLE)
         # self.geometry(MainWindow.CONST_SIZE)
@@ -38,20 +38,22 @@ class MainWindow(tk.Tk):
             self.columnconfigure(rows, weight=1)
             rows += 1
 
-        self.realt_tab = RealtimeTab(self.nb, ser)
-        self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
+        self.log_tab = HistoricalDataTab(self.nb, com)
+        self.nb.add(self.log_tab, text=HistoricalDataTab.CONST_NAME)
 
         self.confg_tab = ConfigTab(self.nb, com)
         self.nb.add(self.confg_tab, text=ConfigTab.CONST_NAME)
 
-        self.log_tab = HistoricalDataTab(self.nb, ser)
-        self.nb.add(self.log_tab, text=HistoricalDataTab.CONST_NAME)
+        # Order is important
+        # Realtime has to be last as it blocks communication
+        #self.realt_tab = RealtimeTab(self.nb, com)
+        #self.nb.add(self.realt_tab, text=RealtimeTab.CONST_NAME)
 
         while 1:
             try:
                 self.update_idletasks()
                 self.update()
-                self.realt_tab.update()
+                #self.realt_tab.update()
             except TclError:
                 exit(0)
 
