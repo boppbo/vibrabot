@@ -18,7 +18,11 @@ class Sensor():
     def __getitem__(self, key):
         if (key < 0):
             key = len(self.values) + key
-        return (key, key*self.interval, self.values[key])
+
+        if (self.data_type == "s"):
+            return (key, key*self.interval, self.values[key] * 0.02 - 273.15)
+        else:
+            return (key, key*self.interval, self.values[key])
 
     @property
     def data_type(self) -> str:
