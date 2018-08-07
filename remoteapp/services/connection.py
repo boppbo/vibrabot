@@ -28,5 +28,3 @@ class ConnectionFactory:
 
     def open_connection(self, port: str) -> serial.Serial:
         return serial.Serial(port, ConnectionFactory.CONST_BAUD_RATE )
-
-    
