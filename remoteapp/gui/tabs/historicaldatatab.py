@@ -1,10 +1,8 @@
-from typing import List
 import time, csv
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import messagebox, Button
-from tkinter import Frame
+import tkinter.ttk
+from typing import List
+from tkinter import messagebox
 from remoteapp.model.sensor import Sensor
 from remoteapp.services.datapersistency import CsvLogWriter, CsvSerializer
 from remoteapp.services.vibrabotcommunication import VibraBotCommunication
@@ -21,7 +19,7 @@ class HistoricalDataController:
 
 
     def save(self):
-        path = filedialog.asksaveasfilename(
+        path = tk.filedialog.asksaveasfilename(
             initialdir = "~",
             initialfile = time.strftime(CsvLogWriter.CONST_FILENAME),
             defaultextension = CsvLogWriter.CONST_EXTENSION,
@@ -31,7 +29,7 @@ class HistoricalDataController:
             self._writer.export(path, self._data)
             self._view.info_written(path)
     def open(self):
-        path = filedialog.askopenfilename(
+        path = tk.filedialog.askopenfilename(
             initialdir = "~",
             filetypes = ( ("Comma separated value", "*.csv"), ("All Files", "*.*") ) )
         
@@ -46,13 +44,13 @@ class HistoricalDataTab(tk.Frame):
     def __init__(self, cls, commService: VibraBotCommunication):
         tk.Frame.__init__(self, cls)
 
-        log_open_button = Button(self, text="open", command=lambda: self._controller.open())
+        log_open_button = tk.Button(self, text="open", command=lambda: self._controller.open())
         log_open_button.grid(row=0, column=0, sticky="WE")
 
-        log_save_button = Button(self, text="save", command=lambda: self._controller.save())
+        log_save_button = tk.Button(self, text="save", command=lambda: self._controller.save())
         log_save_button.grid(row=0, column=1, sticky="WE")
 
-        frame = Frame(self)
+        frame = tk.Frame(self)
         self.log_graph = Graph(frame, commService.read_config())
         frame.grid(row=1, column=0, columnspan=2)
 

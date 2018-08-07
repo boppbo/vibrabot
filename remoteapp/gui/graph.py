@@ -1,20 +1,14 @@
-import matplotlib
+import matplotlib as mpl
 import numpy as np
+import tkinter as tk
+import tkinter.ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-from tkinter import *
-from VibrabotData import *
-from RealtimeGraphData import *
-from RealtimeController import *
 from typing import List
-from remoteapp.model.sensor import *
-
-
-matplotlib.use('TkAgg')
+from remoteapp.model.sensor import Sensor
+mpl.use('TkAgg')
 
 
 class Graph:
-
     CONST_GRAPH_NAME = "log data"
     CONST_XAXIS_NAME = "time [ms]"
     CONST_YAXIS_NAME = "value"
@@ -38,16 +32,16 @@ class Graph:
     CONST_COLOR_DEFAULT = "#000000"
 
     def __init__(self, master, config: List[Sensor]):
-        self.frame = Frame(master)
+        self.frame = tk.Frame(master)
         self.frame.pack()
         self.enabled = []
         self.checkboxes = []
 
         for i in range(len(config)):
-            self.enabled.append(BooleanVar())
+            self.enabled.append(tk.BooleanVar())
 
             self.checkboxes.append(
-                Checkbutton(
+                tk.Checkbutton(
                     self.frame,
                     text=config[i].label,
                     borderwidth=2,
@@ -58,7 +52,7 @@ class Graph:
 
             self.enabled[i].set(config[i].interval != 0)
 
-        fig = Figure(figsize=(12, 4))
+        fig = mpl.figure.Figure(figsize=(12, 4))
         self.ax = fig.add_subplot(111)
         self.ax.set_title(Graph.CONST_GRAPH_NAME, fontsize=16)
         self.ax.set_xlabel(Graph.CONST_XAXIS_NAME, fontsize=14)

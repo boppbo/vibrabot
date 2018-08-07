@@ -1,9 +1,9 @@
 import tkinter as tk
+import tkinter.ttk
 from remoteapp.services.vibrabotcommunication import VibraBotCommunication
 from remoteapp.model.sensor import Sensor
 
 class ConfigTab(tk.Frame):
-
     CONST_NAME = "Config"
     _allowed_interval_values = list(range(0, 65000, 10))
 
@@ -13,9 +13,7 @@ class ConfigTab(tk.Frame):
         self._commService = commService
         self._config = commService.read_config()
 
-        
         row = 0
-
         header = tk.Label(self, text="Decimal Interval from 0 to 65000 in ms, must be divisible by 10")
         header.grid(row=row, column=0, columnspan=3, padx=4, pady=4, sticky="W")
         row += 1

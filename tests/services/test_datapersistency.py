@@ -46,4 +46,3 @@ class TestDataPersistency(TestCase):
         self.assertEqual(res[1].interval, TestDataPersistency.CONST_DATA[1].interval)
         self.assertEqual(res[1].data_type, TestDataPersistency.CONST_DATA[1].data_type)
         self.assertListEqual(res[1].values, TestDataPersistency.CONST_DATA[1].values)
-        
